@@ -75,14 +75,14 @@ export default function Signup() {
                   <Spinner/>
                   <span>Loading...</span>
                   </>)
-                   :'signup'
+                   :'SIGNUP'
                  }
                 </button>
             </div> 
           </form>
           <div>
             <span>Have an account ? </span>
-            <Link to='/login'>SingIn</Link>
+            <Link to='/login'><span className='text-blue-600'>SingIn</span></Link>
           </div>
           </div>
           
