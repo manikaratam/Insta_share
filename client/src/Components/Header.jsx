@@ -3,8 +3,11 @@ import React from 'react'
 import { Link, useLocation  } from 'react-router-dom'
 import logo from '../assets/Standard Collection 8.png'
 import {AiOutlineSearch} from 'react-icons/ai';
+import { useSelector } from 'react-redux';
+
 export default function Header() {
     const path=useLocation().pathname;
+    const {currentUser}=useSelector(state=>state.user)
   return (
     <Navbar className='border-b-2'>
         <Link to="/" className='flex items-center gap-2 text-sm sm:text-xl' >
@@ -25,7 +28,18 @@ export default function Header() {
             <AiOutlineSearch/>
          </Button>
          <div className='flex gap-2 md:order-2'>
-         <Link to='/login' > <Button gradientDuoTone='purpleToBlue' outline>Login</Button> </Link>
+          {
+            currentUser?(
+              
+              <Button gradientDuoTone='purpleToBlue' outline>Logout</Button> 
+             
+            )
+            :(
+              <Link to='/login' >
+          <Button gradientDuoTone='purpleToBlue' outline>Login</Button> 
+          </Link>
+            )
+          }
          <Navbar.Toggle/>
          </div>
          <Navbar.Collapse className='items-center gap-2 '>
