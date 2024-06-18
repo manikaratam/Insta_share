@@ -3,13 +3,15 @@ import {  Label, TextInput,Spinner } from 'flowbite-react'
 import { Link,useNavigate } from 'react-router-dom'
 import signLogo from '../assets/Illustration.png'
 import logo from '../assets/Standard Collection 8.png'
+import { useDispatch,useSelector } from 'react-redux'
+import { signInStart,signInSuccess,signInFailure } from '../Redux/user/userSlice'
 
 export default function Login() {
 
   const navigate =useNavigate();
   const [formData,setFormData]=useState({});
-  const [errorMessage,setErrorMessage]=useState(null);
-  const [loading,setLoading]=useState(false)
+  const {loading,error:errorMessage} = useSelector(state=> state.user);
+    const dispatch = useDispatch();
 
   const handleChange =(e)=>{
     setFormData({...formData,[e.target.id]:e.target.value.trim()});
@@ -18,11 +20,10 @@ export default function Login() {
   const handleSubmit = async (e)=>{
     e.preventDefault();
     if(!formData.email || !formData.password){
-      return setErrorMessage('please fill all the fields');
+      return dispatch(signInFailure('please fill all the fields')); 
     }
     try {
-      setLoading(true);
-      setErrorMessage(null);
+      dispatch(signInStart());
       const res =await fetch('/api/auth/signin',{
         method:'POST',
         headers:{'content-type':'application/json'},
@@ -30,17 +31,16 @@ export default function Login() {
       });
       const data = await res.json();
       if(data.success===false){
-        setLoading(false);
-        return setErrorMessage('Username or password is invalid');
+       dispatch(signInFailure(data.message));
       }
-      setLoading(false);
+      
       if(res.ok){
+        dispatch(signInSuccess(data));
         navigate('/');
       }
       
     } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
 
   }
